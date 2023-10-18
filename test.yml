@@ -1,0 +1,7 @@
+---
+- name: something
+  hosts: all
+  tasks:
+    - debug: var=inventory_hostname
+    - debug: var=ansible_hostname
+    # - debug: var=hostvars

@@ -6,3 +6,11 @@
     dest: /usr/local/share/ca-certificates/
     owner: root
     mode: u+rw,go+r
+
+# one time use but may be useful later
+- name: Bootstrap authorized_keys
+  ansible.posix.authorized_key:
+    comment: hmcg/datta
+    user: "{{ ssh_user }}"
+    state: present
+    key: "{{ lookup('file', 'files/secure/ssh/id_rsa.pub') }}"

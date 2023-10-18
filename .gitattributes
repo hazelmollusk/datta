@@ -1,0 +1,2 @@
+*.secure.yml filter=git-crypt diff=git-crypt
+inventory.yml filter=git-crypt diff=git-crypt

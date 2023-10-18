@@ -1,0 +1,17 @@
+# code: language=ansible
+
+- name: Update Django git repository
+  ansible.builtin.git:
+    accept_hostkey: true
+    repo: "{{ django_url }}"
+    version: "{{ django_version }}"
+    dest: "{{ django_path }}"
+    update: true
+    single_branch: true
+    force: true
+
+- name: Install Django into virtual environment # noqa: package-latest
+  ansible.builtin.pip:
+    name: "{{ django_path }}"
+    virtualenv: "{{ project_env }}"
+    state: latest

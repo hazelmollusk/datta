@@ -1,0 +1,104 @@
+# code: language=ansible
+
+- name: Set default variables
+  hosts: mbme
+  tasks:
+    - name: Check export filename
+      ansible.builtin.set_fact:
+        # export_filename: '{{ project_slug }}.sql.gz'
+        export_filename: '{{ project_slug }}.tar'
+      when: export_filename is not defined
+
+- name: Export production database
+  hosts: mbme_prod_one
+  roles:
+    - django
+  tasks:
+    - name: Create export directory
+      ansible.builtin.file:
+        state: directory
+        path: '{{ project_root }}/export'
+        mode: '0755'
+
+    - name: Build full export path
+      ansible.builtin.set_fact:
+        export_path: '{{ project_root }}/export/{{ export_filename }}'
+
+    - name: Check if file exists
+      ansible.builtin.stat:
+        path: '{{ export_path }}'
+      register: export_stat_res
+      failed_when: export_stat_res.stat.exists and force is not defined
+
+    - name: Export database
+      community.postgresql.postgresql_db:
+        state: dump
+        name: '{{ pg_dbname }}'
+        target: '{{ export_path }}'
+        login_host: '{{ pg_host }}'
+        login_user: '{{ pg_user }}'
+        login_password: '{{ pg_pass }}'
+        # dump_extra_args: '--clean --if-exists --create'
+
+    - name: Fetch export file
+      ansible.builtin.fetch:
+        dest: '/tmp/{{ export_filename }}'
+        src: '{{ export_path }}'
+        flat: true
+
+- name: Restore local database
+  hosts: mbme_dev
+  roles:
+    - django
+  tasks:
+    - name: Drop original database  # noqa: ignore-errors
+      community.postgresql.postgresql_db:
+        state: absent
+        name: '{{ pg_dbname }}_orig'
+        login_host: '{{ pg_host }}'
+        login_user: '{{ pg_admin_user }}'
+        login_unix_socket: '{{ pg_sock | default(None) }}'
+        login_password: '{{ pg_admin_pass | default(None) }}'
+      ignore_errors: true
+
+    - name: Rename local database  # noqa: ignore-errors
+      community.postgresql.postgresql_db:
+        state: rename
+        target: '{{ pg_dbname }}_orig'
+        name: '{{ pg_dbname }}'
+        login_host: '{{ pg_host }}'
+        login_user: '{{ pg_admin_user }}'
+        login_unix_socket: '{{ pg_sock | default(None) }}'
+        login_password: '{{ pg_admin_pass | default(None) }}'
+      ignore_errors: true
+
+    - name: Create local database
+      community.postgresql.postgresql_db:
+        name: '{{ pg_dbname }}'
+        login_host: '{{ pg_host }}'
+        login_user: '{{ pg_admin_user }}'
+        owner: '{{ pg_user }}'
+        login_unix_socket: '{{ pg_sock | default(None) }}'
+        login_password: '{{ pg_admin_pass | default(None) }}'
+
+    - name: Restore local database
+      community.postgresql.postgresql_db:
+        state: restore
+        target: '/tmp/{{ export_filename }}'
+        name: '{{ pg_dbname }}'
+        login_host: '{{ pg_host }}'
+        login_user: '{{ pg_admin_user }}'
+        login_unix_socket: '{{ pg_sock | default(None) }}'
+        login_password: '{{ pg_admin_pass | default(None) }}'
+        # FAXMI: ?? options do not work...
+        # target_opts: '--clean --if-exists --create'
+
+    - name: Drop original database  # noqa: ignore-errors
+      community.postgresql.postgresql_db:
+        state: absent
+        name: '{{ pg_dbname }}_orig'
+        login_host: '{{ pg_host }}'
+        login_user: '{{ pg_admin_user }}'
+        login_unix_socket: '{{ pg_sock | default(None) }}'
+        login_password: '{{ pg_admin_pass | default(None) }}'
+      ignore_errors: true

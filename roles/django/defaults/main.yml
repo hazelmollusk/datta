@@ -1,0 +1,11 @@
+project_slug: project
+project_path: "{{ project_root }}/{{ project_slug }}"
+project_version: main
+project_env: "{{ project_root }}/env"
+django_path: "{{ project_root }}/django"
+django_version: stable/5.0.x
+pg_host: localhost
+pg_dbname: "{{ project_slug }}"
+pg_user: "{{ pg_dbname }}"
+pg_admin_dbname: postgres
+pg_admin_user: postgres

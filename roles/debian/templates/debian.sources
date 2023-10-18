@@ -1,0 +1,4 @@
+Types: deb deb-src
+URIs: mirror+file:///etc/apt/mirrors/debian.list
+Suites: {{ debian_release }}
+Components: main contrib non-free

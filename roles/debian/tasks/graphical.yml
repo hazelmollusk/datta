@@ -1,0 +1,6 @@
+- name: Install graphical Debian packages
+  ansible.builtin.apt:
+    default_release: '{{ debian_release }}'
+    name:
+      - terminator
+  when: graphical is defined

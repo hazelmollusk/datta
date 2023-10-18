@@ -1,0 +1,8 @@
+# code: language=ansible
+
+- name: Install z23 root certificate
+  ansible.builtin.copy:
+    src: z23.root.crt
+    dest: /usr/local/share/ca-certificates/
+    owner: root
+    mode: u+rw,go+r

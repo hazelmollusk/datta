@@ -1,0 +1,15 @@
+# code: language=ansible
+
+- name: Install/upgrade Django
+  ansible.builtin.include_tasks: django.yml
+  tags: django
+  when:
+    - skip_updates is defined
+    - not 'django' in skip_updates
+
+- name: Clone/update project
+  ansible.builtin.include_tasks: project.yml
+  tags: project
+  when:
+    - skip_updates is defined
+    - not 'project' in skip_updates

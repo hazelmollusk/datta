@@ -1,0 +1,19 @@
+# code: language=ansible
+---
+- name: Publish static website content
+  hosts: localhost
+  roles:
+    - web
+  tags:
+    - static
+    - website
+    - hmcg
+
+- name: Update django instances
+  hosts: x-*.oksoda.org
+  roles:
+    - django
+  tags:
+    - django
+    - blog
+    - mbme

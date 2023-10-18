@@ -1,0 +1,11 @@
+# code: language=ansible
+
+#- name: Sync HMCG content to dysnomia
+- name: Sync HMCG content to S3
+  community.aws.s3_sync:
+    bucket: "{{ web_hmcg_bucket }}"
+    key_prefix: "{{ web_hmcg_dest }}/"
+    permission: public-read
+    region: "{{ aws_region }}"
+    mode: push
+    file_root: "{{ web_hmcg_src }}"

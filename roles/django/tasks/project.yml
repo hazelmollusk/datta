@@ -1,0 +1,36 @@
+# code: language=ansible
+
+- name: Update project git repository
+  ansible.builtin.git:
+    accept_hostkey: true
+    repo: '{{ project_url }}'
+    version: '{{ project_version }}'
+    dest: '{{ project_path }}'
+    update: true
+    single_branch: true
+    force: true
+  when:
+    - not 'project' in skip_updates
+
+- name: Generate pgsql service config
+  ansible.builtin.template:
+    src: pg_service.conf.j2
+    dest: '{{ project_path }}/.pg_service.conf'
+    mode: ug+r
+
+- name: Install Python requirements
+  ansible.builtin.pip:
+    requirements: '{{ project_path }}/requirements.txt'
+    virtualenv: '{{ project_env }}'
+
+- name: Run Django maintenance tasks
+  community.general.django_manage:
+    project_path: '{{ project_path }}'
+    virtualenv: '{{ project_env }}'
+    settings: '{{ project_slug }}.settings'
+    command: '{{ item }}'
+  loop:
+    - migrate
+    - collectstatic
+  when:
+    - item not in skip_updates

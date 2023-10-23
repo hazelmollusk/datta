@@ -1,4 +1,4 @@
-project_slug: project
+# project_slug: project
 project_path: "{{ project_root }}/{{ project_slug }}"
 project_version: main
 project_env: "{{ project_root }}/env"

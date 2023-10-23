@@ -51,7 +51,7 @@
   roles:
     - django
   tasks:
-    - name: Drop original database  # noqa: ignore-errors
+    - name: Drop original database # noqa: ignore-errors
       community.postgresql.postgresql_db:
         state: absent
         name: '{{ pg_dbname }}_orig'
@@ -61,7 +61,7 @@
         login_password: '{{ pg_admin_pass | default(None) }}'
       ignore_errors: true
 
-    - name: Rename local database  # noqa: ignore-errors
+    - name: Rename local database # noqa: ignore-errors
       community.postgresql.postgresql_db:
         state: rename
         target: '{{ pg_dbname }}_orig'
@@ -93,7 +93,7 @@
         # FAXMI: ?? options do not work...
         # target_opts: '--clean --if-exists --create'
 
-    - name: Drop original database  # noqa: ignore-errors
+    - name: Drop original database # noqa: ignore-errors
       community.postgresql.postgresql_db:
         state: absent
         name: '{{ pg_dbname }}_orig'
@@ -102,3 +102,11 @@
         login_unix_socket: '{{ pg_sock | default(None) }}'
         login_password: '{{ pg_admin_pass | default(None) }}'
       ignore_errors: true
+
+- name: Clean up exports
+  hosts: mbme_prod_one
+  tasks:
+    - name: Clean export directory
+      ansible.builtin.file:
+        state: absent
+        path: '{{ project_root }}/export'

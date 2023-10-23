@@ -10,7 +10,7 @@
     - hmcg
 
 - name: Update django instances
-  hosts: x-*.oksoda.org
+  hosts: mbme_prod
   roles:
     - django
   tags:

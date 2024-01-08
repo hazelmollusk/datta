@@ -15,7 +15,7 @@
 - name: Generate pgsql service config
   ansible.builtin.template:
     src: pg_service.conf.j2
-    dest: '{{ project_path }}/.pg_service.conf'
+    dest: '{{ project_path }}/config/pg_service.conf'
     mode: ug+r
 
 - name: Install Python requirements
@@ -23,11 +23,22 @@
     requirements: '{{ project_path }}/requirements.txt'
     virtualenv: '{{ project_env }}'
 
+- name: Install local Django (dev)
+  ansible.builtin.pip:
+    name: file:///srv/mattbarry.me/django
+    virtualenv: '{{ project_env }}'
+
+- name: Install local requirements
+  ansible.builtin.pip:
+    requirements: '{{ project_path }}/config/requirements.txt'
+    virtualenv: '{{ project_env }}'
+  ignore_errors: true
+
 - name: Run Django maintenance tasks
   community.general.django_manage:
     project_path: '{{ project_path }}'
     virtualenv: '{{ project_env }}'
-    settings: '{{ project_slug }}.settings'
+    settings: '{{ django_settings }}'
     command: '{{ item }}'
   loop:
     - migrate

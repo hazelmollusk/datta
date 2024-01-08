@@ -64,6 +64,8 @@
     force_apt_get: true
     default_release: "{{ debian_release }}"
     name:
+      - command-not-found
+      - apt-file
       - fortune
       - vim
       - screen

@@ -5,4 +5,5 @@
   become: true
   roles:
     - debian
+    # - configure home directory; check vcsh, move .ssh .gnupg out of the way, etc   # TODO
     - rooted # make this conditional when needed

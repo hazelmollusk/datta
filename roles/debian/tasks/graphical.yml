@@ -3,4 +3,5 @@
     default_release: '{{ debian_release }}'
     name:
       - terminator
+      - command-not-found
   when: graphical is defined

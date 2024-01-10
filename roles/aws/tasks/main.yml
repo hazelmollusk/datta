@@ -1,0 +1,8 @@
+- name: Install AWS-specific packages
+  ansible.builtin.apt:
+    force_apt_get: true
+    install_recommends: true
+    name:
+#      - awscli
+      - python3-boto*
+

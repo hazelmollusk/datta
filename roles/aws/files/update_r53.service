@@ -1,0 +1,8 @@
+[Unit]
+Description=Update Route53 with EC2 data
+
+[Service]
+ExecStart=/usr/local/bin/update_r53.py
+
+[Install]
+WantedBy=multi-user.target

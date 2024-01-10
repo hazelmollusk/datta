@@ -1,0 +1,13 @@
+- name: Setting up python virtualenv
+  tags: python
+  ansible.builtin.pip:
+    virtualenv: "{{ system_virtualenv }}"
+    virtualenv_python: python3
+    name:
+      - urllib3  # placeholder, pretty much
+
+- name: Install with_env
+  ansible.builtin.template:
+    src: with_venv
+    dest: /usr/local/bin/
+    mode: 0755

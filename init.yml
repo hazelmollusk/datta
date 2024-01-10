@@ -3,13 +3,15 @@
 - name: Update all nodes
   hosts: all
   become: true
+  tags: updates
   roles:
     - debian
-    # - configure home directory; check vcsh, move .ssh .gnupg out of the way, etc   # TODO
     - rooted # make this conditional when needed
+    # - configure home directory; check vcsh, move .ssh .gnupg out of the way, etc   # TODO
 
 - name: Update AWS instances
   hosts: aws
   become: true
+  tags: aws
   roles:
     - aws

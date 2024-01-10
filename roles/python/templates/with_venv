@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SYSTEM_VIRTUALENV="{{ system_virtualenv }}"
+
+source "$SYSTEM_VIRTUALENV/bin/activate"
+exec $*
+deactivate

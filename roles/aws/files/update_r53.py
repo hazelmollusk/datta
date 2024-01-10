@@ -29,6 +29,7 @@ for tag in instance['Tags']:
         zones.append(tag['Value'])
 
 if not zones:
+    print('no zones to update', file=sys.stderr)
     sys.exit(1)
 
 private_ip, public_ip = (
@@ -47,10 +48,11 @@ for zone in zones:
                 if hosted_zone['Config']['PrivateZone'] \
                 else public_ip
             zone_id = hosted_zone['Id']
+            print(name, zone, ip, zone_id, sep=':')
             r53.change_resource_record_sets(
                 HostedZoneId=f'{zone_id}',
                 ChangeBatch={
-                    'Comment': f'modified by update_r53.py @ {now}',
+                    'Comment': f'update_r53.py @ {now}',
                     'Changes': [
                         {
                             'Action': 'UPSERT',

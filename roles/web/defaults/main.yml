@@ -1,3 +1,4 @@
 web_hmcg_src: /home/matt/hack/www/hazelmollusk
 web_hmcg_bucket: hmcg-web-static
 web_hmcg_dest: prod
+aws_region: us-east-1

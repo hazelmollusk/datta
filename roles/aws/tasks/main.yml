@@ -30,7 +30,7 @@
     dest: /usr/local/bin/
 
 - name: Install update_r53.service
-  ansible.builtin.copy:
+  ansible.builtin.template:
     mode: 0644
     src: update_r53.service
     dest: /etc/systemd/system

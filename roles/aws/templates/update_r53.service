@@ -2,7 +2,7 @@
 Description=Update Route53 with EC2 data
 
 [Service]
-ExecStart=/etc/system-virtualenv/bin/python3 /usr/local/bin/update_r53.py
+ExecStart={{ system_virtualenv }} /usr/local/bin/update_r53.py
 
 [Install]
 WantedBy=multi-user.target

@@ -23,10 +23,10 @@
     requirements: '{{ project_path }}/requirements.txt'
     virtualenv: '{{ project_env }}'
 
-- name: Install local Django (dev)
-  ansible.builtin.pip:
-    name: file:///srv/mattbarry.me/django
-    virtualenv: '{{ project_env }}'
+# - name: Install local Django (dev)
+#   ansible.builtin.pip:
+#     name: file:///srv/mattbarry.me/django
+#     virtualenv: '{{ project_env }}'
 
 - name: Install local requirements
   ansible.builtin.pip:

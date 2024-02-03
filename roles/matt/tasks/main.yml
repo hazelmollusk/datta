@@ -1,0 +1,7 @@
+
+- name: Install local toolset
+  ansible.builtin.apt:
+    force_apt_get: true
+    default_release: "{{ debian_release }}"
+    name:
+      - ansible-core  # jfc you idiot
